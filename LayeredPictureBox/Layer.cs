@@ -20,6 +20,7 @@ namespace LayeredPictureBox
         //empty images are always hidden, otherwise, use the stored value
         public bool Shown { get => !Size.IsEmpty && shown; set { if (shown != value) { OnPropertyChanging(); shown = value; OnPropertyChanged(); } } }
 
+        public Layer() : this(null, new Point(0,0)) { }
         public Layer(T image, Point drawLocation)
         {
             Image = image;
