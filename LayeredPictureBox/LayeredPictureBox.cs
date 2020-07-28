@@ -9,8 +9,12 @@ namespace LayeredPictureBox
 {
     public partial class LayeredPictureBox : Panel
     {
+        const string CanvasCategory = "Canvas";
+
         #region layers
+        [Category(CanvasCategory)]
         public int LayerCount => Layers.Count;
+        [Category(CanvasCategory)]
         public List<Layer<Image>> Layers { get; } = new List<Layer<Image>>();
         public void AddLayer(Image layer)
         {
@@ -57,6 +61,7 @@ namespace LayeredPictureBox
         #endregion
 
         int canvasScale = 1;
+        [Category(CanvasCategory), DefaultValue(1)]
         public int CanvasScale
         {
             get => canvasScale;
@@ -85,6 +90,7 @@ namespace LayeredPictureBox
         }
 
         Layer<Image> WidthLeader = null;
+        [Category(CanvasCategory)]
         public int LeaderWidth { get => (WidthLeader != null && WidthLeader.Shown) ? WidthLeader.TotalWidth : 0; }
         void FindNewWidthLeader()
         {
@@ -94,6 +100,7 @@ namespace LayeredPictureBox
         }
 
         Layer<Image> HeightLeader = null;
+        [Category(CanvasCategory)]
         public int LeaderHeight { get => (HeightLeader != null && HeightLeader.Shown) ? HeightLeader.TotalHeight : 0; }
 
         void FindNewHeightLeader()
@@ -106,13 +113,17 @@ namespace LayeredPictureBox
 
         #region max size and locking
         Size maxCanvasSize = new Size(0, 0);
+        [Category(CanvasCategory)]
         public Size MaxCanvasSize { get => maxCanvasSize; set { maxCanvasSize = value; UpdateCanvasSize(); } }
 
+        [Category(CanvasCategory), DefaultValue(0)]
         public int MaxCanvasWidth { get => MaxCanvasSize.Width; set { maxCanvasSize.Width = value; UpdateCanvasSize(); } }
 
+        [Category(CanvasCategory), DefaultValue(0)]
         public int MaxCanvasHeight { get => MaxCanvasSize.Height; set { maxCanvasSize.Height = value; UpdateCanvasSize(); } }
 
         bool canvasSizeLocked = false;
+        [Category(CanvasCategory), DefaultValue(false)]
         public bool CanvasSizeLocked
         {
             get => canvasSizeLocked;
@@ -143,8 +154,11 @@ namespace LayeredPictureBox
         }
         #endregion
 
+        [Category(CanvasCategory), ReadOnly(true)]
         Size CurrentCanvasSize => new Size(CurrentCanvasWidth, CurrentCanvasHeight);
+        [Category(CanvasCategory), ReadOnly(true)]
         public int CurrentCanvasWidth { get; set; } = 0;
+        [Category(CanvasCategory), ReadOnly(true)]
         public int CurrentCanvasHeight { get; set; } = 0;
 
         /// <summary>
