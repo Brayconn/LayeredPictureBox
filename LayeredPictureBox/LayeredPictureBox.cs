@@ -16,6 +16,16 @@ namespace LayeredPictureBox
         public int LayerCount => Layers.Count;
         [Category(CanvasCategory)]
         public List<Layer<Image>> Layers { get; } = new List<Layer<Image>>();
+        public Layer<Image> CreateLayer()
+        {
+            var layer = new Layer<Image>();
+            AddLayer(layer);
+            return layer;
+        }
+        public void CreateLayer(out Layer<Image> layer)
+        {
+            AddLayer(layer = new Layer<Image>());
+        }
         public void AddLayer(Image layer)
         {
             AddLayer(layer, new Point(0, 0));
