@@ -225,6 +225,19 @@ namespace LayeredPictureBox
         [DefaultValue(AutoSizeMode.GrowAndShrink)]
         public override AutoSizeMode AutoSizeMode { get; set; } = AutoSizeMode.GrowAndShrink;
 
+        public Image Flatten()
+        {
+            var rect = new Rectangle(0, 0, CurrentCanvasWidth, CurrentCanvasHeight);
+            var output = new Bitmap(CurrentCanvasWidth, CurrentCanvasHeight);
+            using(var g = Graphics.FromImage(output))
+            {
+                var args = new PaintEventArgs(g, rect);
+                OnPaintBackground(args);
+                OnPaint(args);
+            }
+            return output;
+        }
+
         #region painting
         protected override void OnPaintBackground(PaintEventArgs e)
         {
