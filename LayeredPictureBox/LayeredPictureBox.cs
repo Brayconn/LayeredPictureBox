@@ -227,13 +227,17 @@ namespace LayeredPictureBox
 
         public Image Flatten()
         {
+            return Flatten(CanvasScale);
+        }
+        public Image Flatten(int scale)
+        {
             var rect = new Rectangle(0, 0, CurrentCanvasWidth, CurrentCanvasHeight);
             var output = new Bitmap(CurrentCanvasWidth, CurrentCanvasHeight);
             using(var g = Graphics.FromImage(output))
             {
-                var args = new PaintEventArgs(g, rect);
-                OnPaintBackground(args);
-                OnPaint(args);
+                var args = new PaintEventArgs(g, rect.Multiply(scale));
+                //TODO might need to call the background thing here...
+                PaintLayers(args, scale);
             }
             return output;
         }
@@ -245,11 +249,14 @@ namespace LayeredPictureBox
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            PaintLayers(e);
+            PaintLayers(e, CanvasScale);
             base.OnPaint(e);
         }
-
         private void PaintLayers(PaintEventArgs e)
+        {
+            PaintLayers(e, CanvasScale);
+        }
+        private void PaintLayers(PaintEventArgs e, int scale)
         {
             //clear the area to redraw
             //e.Graphics.CompositingMode = CompositingMode.SourceCopy;
@@ -257,7 +264,7 @@ namespace LayeredPictureBox
 
             //the clipping rectangle is based off of the DISPLAYED image
             //which means we need to size it down to account for any scaling
-            var realClip = e.ClipRectangle.ExpandDivide(canvasScale);
+            var realClip = e.ClipRectangle.ExpandDivide(scale);
 
             e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
             e.Graphics.CompositingMode = CompositingMode.SourceOver;
@@ -273,7 +280,7 @@ namespace LayeredPictureBox
                     if (!src.IsEmpty)
                     {
                         //destination is where ever we just were (add the offset back) multiplied to fit the scale again
-                        var dest = src.PositiveOffset(Layers[i].Location).Multiply(CanvasScale);
+                        var dest = src.PositiveOffset(Layers[i].Location).Multiply(scale);
                         e.Graphics.DrawImage(Layers[i].Image, dest, src, GraphicsUnit.Pixel);
                     }
                 }
